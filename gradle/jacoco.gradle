@@ -1,0 +1,38 @@
+test {
+    finalizedBy jacocoTestReport, jacocoTestCoverageVerification
+}
+
+def exclusionListInDirFormat = []
+
+def exclusionListInClassFormat = [
+        'com.example.springmongo.SpringMongoApplicatin'
+]
+
+jacocoTestCoverageVerification {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: exclusionListInDirFormat)
+        }))
+    }
+
+    violationRules {
+        rule {
+            excludes = exclusionListInClassFormat
+            limit {
+                minimum = 0.50
+            }
+        }
+    }
+}
+
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: exclusionListInDirFormat)
+        }))
+    }
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
