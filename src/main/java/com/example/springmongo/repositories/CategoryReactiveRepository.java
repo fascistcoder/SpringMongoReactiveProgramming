@@ -1,5 +1,6 @@
 package com.example.springmongo.repositories;
 
+import com.example.springmongo.model.Category;
 import com.example.springmongo.model.UnitOfMeasure;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
@@ -9,6 +10,6 @@ import reactor.core.publisher.Mono;
  * @version 1.0
  * @since 22/04/22
  */
-public interface UnitOfMeasureReactiveRepository extends ReactiveMongoRepository<UnitOfMeasure, String> {
-	Mono<UnitOfMeasure> findByDescription(String description);
+public interface CategoryReactiveRepository extends ReactiveMongoRepository<Category, String> {
+	Mono<Category> findByDescription(String description);
 }

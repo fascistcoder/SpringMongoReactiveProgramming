@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since 12/04/22
  */
 @Disabled
+@SpringBootTest
 @DataMongoTest
 public class UnitOfMeasureRepositoryIT {
 	@Autowired
