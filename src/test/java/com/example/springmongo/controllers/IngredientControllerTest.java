@@ -3,6 +3,7 @@ package com.example.springmongo.controllers;
 
 import com.example.springmongo.commands.IngredientCommand;
 import com.example.springmongo.commands.RecipeCommand;
+import com.example.springmongo.commands.UnitOfMeasureCommand;
 import com.example.springmongo.services.IngredientService;
 import com.example.springmongo.services.RecipeService;
 import com.example.springmongo.services.UnitOfMeasureService;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
 
@@ -79,7 +81,7 @@ class IngredientControllerTest {
         recipeCommand.setId("1");
 
         when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
-        when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+        when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/new"))
                 .andExpect(status().isOk())
@@ -95,7 +97,7 @@ class IngredientControllerTest {
 
         //when
         when(ingredientService.findByRecipeAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
-        when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+        when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
         //then
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/2/update"))

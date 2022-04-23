@@ -4,13 +4,16 @@ package com.example.springmongo.services;
 import com.example.springmongo.commands.UnitOfMeasureCommand;
 import com.example.springmongo.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import com.example.springmongo.model.UnitOfMeasure;
+import com.example.springmongo.repositories.UnitOfMeasureReactiveRepository;
 import com.example.springmongo.repositories.UnitOfMeasureRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +30,7 @@ class UnitOfMeasureServiceImplTest {
     UnitOfMeasureService service;
 
     @Mock
-    UnitOfMeasureRepository unitOfMeasureRepository;
+    UnitOfMeasureReactiveRepository unitOfMeasureRepository;
 
 
     @BeforeEach
@@ -48,10 +51,10 @@ class UnitOfMeasureServiceImplTest {
         uom2.setId("2");
         unitOfMeasures.add(uom2);
 
-        when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasures);
+        when(unitOfMeasureRepository.findAll()).thenReturn(Flux.just(uom1, uom2));
 
         //when
-        Set<UnitOfMeasureCommand> commands = service.listAllUoms();
+       List<UnitOfMeasureCommand> commands = service.listAllUoms().collectList().block();
 
         //then
         assertEquals(2, commands.size());
