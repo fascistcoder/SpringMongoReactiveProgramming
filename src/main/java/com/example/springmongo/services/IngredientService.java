@@ -1,6 +1,7 @@
 package com.example.springmongo.services;
 
 import com.example.springmongo.commands.IngredientCommand;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="pulkit.aggarwal@upgrad.com">Pulkit Aggarwal</a>
@@ -8,7 +9,7 @@ import com.example.springmongo.commands.IngredientCommand;
  * @since 30/09/21
  */
 public interface IngredientService {
-    IngredientCommand findByRecipeAndIngredientId(String recipeId, String ingredientId);
-    IngredientCommand saveIngredientCommand(IngredientCommand command);
-    void deleteById(String recipeId, String idToDelete);
+    Mono<IngredientCommand> findByRecipeAndIngredientId(String recipeId, String ingredientId);
+    Mono<IngredientCommand> saveIngredientCommand(IngredientCommand command);
+    Mono<Void> deleteById(String recipeId, String idToDelete);
 }
