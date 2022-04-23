@@ -1,6 +1,7 @@
 package com.example.springmongo.services;
 
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 /**
  * @author <a href="pulkit.aggarwal@upgrad.com">Pulkit Aggarwal</a>
@@ -8,5 +9,5 @@ import org.springframework.web.multipart.MultipartFile;
  * @since 01/10/21
  */
 public interface ImageService {
-    void saveImageFile(String recipeId, MultipartFile file);
+    Mono<Void> saveImageFile(String recipeId, MultipartFile file);
 }
