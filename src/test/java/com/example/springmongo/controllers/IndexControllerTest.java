@@ -1,6 +1,5 @@
 package com.example.springmongo.controllers;
 
-
 import com.example.springmongo.model.Recipe;
 import com.example.springmongo.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,8 +12,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Flux;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,51 +29,55 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 class IndexControllerTest {
 
-    IndexController indexController;
+	IndexController indexController;
 
-    @Mock
-    private RecipeService recipeService;
+	@Mock
+	private RecipeService recipeService;
 
-    @Mock
-    private Model model;
+	@Mock
+	private Model model;
 
-    @BeforeEach
-    void setUp() throws Exception{
-        MockitoAnnotations.openMocks(this);
+	@BeforeEach
+	void setUp() throws Exception {
+		MockitoAnnotations.openMocks(this);
 
-        indexController = new IndexController(recipeService);
-    }
+		indexController = new IndexController(recipeService);
+	}
 
-    @Test
-    void testMockMVC() throws Exception{
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
+	@Test
+	void testMockMVC() throws Exception {
+		MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(view().name("index"));
-    }
+		when(recipeService.getRecipes()).thenReturn(Flux.empty());
 
-    @Test
-    void getIndexPage() throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.get("/"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(view().name("index"));
+	}
 
-        //given
-        Set<Recipe>recipes = new HashSet<>();
-        recipes.add(new Recipe());
+	@Test
+	void getIndexPage() throws Exception {
 
-        Recipe recipe = new Recipe();
-        recipe.setId("1");
-        recipes.add(recipe);
+		//given
+		Set<Recipe> recipes = new HashSet<>();
+		recipes.add(new Recipe());
 
-        when(recipeService.getRecipes()).thenReturn(recipes);
+		Recipe recipe = new Recipe();
+		recipe.setId("1");
+		recipes.add(recipe);
 
-        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+		when(recipeService.getRecipes()).thenReturn(Flux.fromIterable(recipes));
 
-        //when
-        String viewName = indexController.getIndexPage(model);
+		ArgumentCaptor<List<Recipe>> argumentCaptor = ArgumentCaptor.forClass(List.class);
 
-        //then
-        assertEquals("index", viewName);
-        verify(recipeService, times(1)).getRecipes();
-        verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
-        Set<Recipe> setInController = argumentCaptor.getValue();
-        assertEquals(2, setInController.size());
-    }
+		//when
+		String viewName = indexController.getIndexPage(model);
+
+		//then
+		assertEquals("index", viewName);
+		verify(recipeService, times(1)).getRecipes();
+		verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
+		List<Recipe> setInController = argumentCaptor.getValue();
+		assertEquals(2, setInController.size());
+	}
 }

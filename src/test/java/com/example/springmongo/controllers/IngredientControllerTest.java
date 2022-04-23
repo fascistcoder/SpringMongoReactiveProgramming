@@ -52,7 +52,7 @@ class IngredientControllerTest {
 	@Test
 	void listIngredients() throws Exception {
 		RecipeCommand command = new RecipeCommand();
-		when(recipeService.findCommandById(anyString())).thenReturn(command);
+		when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(command));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredients"))
 				.andExpect(status().isOk())
@@ -78,7 +78,7 @@ class IngredientControllerTest {
 		RecipeCommand recipeCommand = new RecipeCommand();
 		recipeCommand.setId("1");
 
-		when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
+		when(recipeService.findCommandById(anyString())).thenReturn(Mono.just(recipeCommand));
 		when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasureCommand()));
 
 		mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/ingredient/new"))
