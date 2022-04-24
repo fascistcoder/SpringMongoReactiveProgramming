@@ -6,11 +6,14 @@ import com.example.springmongo.commands.UnitOfMeasureCommand;
 import com.example.springmongo.services.IngredientService;
 import com.example.springmongo.services.RecipeService;
 import com.example.springmongo.services.UnitOfMeasureService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,11 +25,18 @@ import org.springframework.web.bind.annotation.PostMapping;
  */
 @Slf4j
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class IngredientController {
-	public final RecipeService recipeService;
-	public final IngredientService ingredientService;
-	public final UnitOfMeasureService unitOfMeasureService;
+	private final RecipeService recipeService;
+	private final IngredientService ingredientService;
+	private final UnitOfMeasureService unitOfMeasureService;
+
+	private WebDataBinder webDataBinder;
+
+	@InitBinder("ingredient")
+	public void initBinder(WebDataBinder webDataBinder) {
+		this.webDataBinder = webDataBinder;
+	}
 
 	@GetMapping("/recipe/{recipeId}/ingredients")
 	public String listIngredients(@PathVariable String recipeId, Model model) {
@@ -64,9 +74,22 @@ public class IngredientController {
 	}
 
 	@PostMapping("recipe/{recipeId}/ingredient")
-	public String saveOrUpdate(@ModelAttribute IngredientCommand command) {
-		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
+	public String saveOrUpdate(@ModelAttribute IngredientCommand command, Model model) {
 
+		webDataBinder.validate();
+
+		BindingResult bindingResult = webDataBinder.getBindingResult();
+
+		if(bindingResult.hasErrors()){
+			bindingResult.getAllErrors().forEach(objectError -> {
+				log.debug(objectError.toString());
+			});
+
+			model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+			return "recipe/ingredient/ingredientform";
+		}
+
+		IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
 
 		log.debug("saved ingredient id:" + savedCommand.getId());
 
