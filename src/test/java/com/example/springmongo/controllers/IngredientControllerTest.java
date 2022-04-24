@@ -7,6 +7,7 @@ import com.example.springmongo.services.IngredientService;
 import com.example.springmongo.services.RecipeService;
 import com.example.springmongo.services.UnitOfMeasureService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @version 1.0
  * @since 29/09/21
  */
+@Disabled
 class IngredientControllerTest {
 
 	@Mock

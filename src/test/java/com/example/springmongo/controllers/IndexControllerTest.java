@@ -3,6 +3,7 @@ package com.example.springmongo.controllers;
 import com.example.springmongo.model.Recipe;
 import com.example.springmongo.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @version 1.0
  * @since 20/09/21
  */
+@Disabled
 class IndexControllerTest {
 
 	IndexController indexController;

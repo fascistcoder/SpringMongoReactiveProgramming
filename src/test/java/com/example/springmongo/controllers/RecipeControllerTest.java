@@ -6,6 +6,7 @@ import com.example.springmongo.exceptions.NotFoundException;
 import com.example.springmongo.model.Recipe;
 import com.example.springmongo.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @version 1.0
  * @since 27/09/21
  */
+@Disabled
 class RecipeControllerTest {
 
     @Mock
